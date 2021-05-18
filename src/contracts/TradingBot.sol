@@ -86,6 +86,17 @@ pragma solidity ^0.5.0;
 
 
 contract DyDxFlashLoan is Structs {
+    /*
+    Test addresses that I could find, but I don't think ropsten will be useful
+
+        DyDxPool pool = DyDxPool(0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e); // couldn't find dydx solo margin ropsten contract address, this is mainnet
+
+        address public WETH = 0xc778417e063141139fce010982780140aa0cd5ab;
+        // address public SAI = 0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359;
+        address public USDC = 0x68ec573C119826db2eaEA1Efbfc2970cDaC869c4;
+        address public DAI = 0xc715abcd34c8ed9ebbf95990e0c43401fbbc122d;
+        mapping(address => uint256) public currencies;
+    */
     DyDxPool pool = DyDxPool(0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e);
 
     address public WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;

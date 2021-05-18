@@ -148,7 +148,7 @@ async function checkArb(args) {
   // Skip if Maker Fee
   // TODO does this even make sense? The bot is always going to be the taker, plus I haven't yet seen any maker fee on 0x other than 0 
   if(zrxOrder.makerFee.toString() !== '0') {
-    console.log('Order has maker fee')
+    // console.log('Order has maker fee')
     return
   }
 
@@ -190,12 +190,12 @@ async function checkArb(args) {
   if(amountLeft != zrxOrder.takerAssetAmount){
   	amountLeft = web3.utils.fromWei(metadata.remainingFillableTakerAssetAmount, 'ether') // typeof = string
   	if(amountLeft<0.01){
-  		console.log('SKIP order taker asset left less than 0.01')
+  		// console.log('SKIP order taker asset left less than 0.01')
   		return
   	}
   	// TODO inputamount needs to equal amountleft
   	// I'm HERE <<<=========
-  	console.log('Order taker asset remaining: ' + amountLeft)
+  	// console.log('Order taker asset remaining: ' + amountLeft)
   }
 
   // Fetch 1Split Data
@@ -218,19 +218,19 @@ async function checkArb(args) {
   	// TODO make the net profit calculation look cleaner by assigning the results of if statements to constants
   	// e.g. the below line should look like: if(takerFeeAsset == ASSET_ADDRESSES[assetOrder[0])
     if ('0x'+zrxOrder.takerFeeAssetData.substring(34,74) == ASSET_ADDRESSES[assetOrder[0]]) {
-    	console.log("Order has taker fees, payable in TAKER asset: " + assetOrder[0])
+    	// console.log("Order has taker fees, payable in TAKER asset: " + assetOrder[0])
     	// subtracting fee from net profit calculation
   		// the fee currency is usually the taker asset, i.e. it is the same currency as the other amounts in the netProfit calculation and can be subtracted as is
   		// however additional logic is needed to handle cases where the taker fee is in the maker currency, which would require converting the amount to the taker currency amount before subtracting it
     	netProfit = outputAssetAmount - inputAssetAmount - estimatedGasFee - zrxOrder.takerFee
     } else if ('0x'+zrxOrder.takerFeeAssetData.substring(34,74) == ASSET_ADDRESSES[assetOrder[1]]) {
     	// could just be just an 'else', but better being explicit
-    	console.log("Order has taker fees, payable in MAKER asset: " + assetOrder[1])
+    	// console.log("Order has taker fees, payable in MAKER asset: " + assetOrder[1])
     	return // TODO remove this and account for change of asset in net profit calculation
     } else {
     	// this should never be the case, but better be safe.
     	// I.e. it is neither 0x nor taker or maker asset address
-    	console.log("takerFeeAssetData not recognized: " + zrxOrder.takerFeeAssetData)
+    	// console.log("takerFeeAssetData not recognized: " + zrxOrder.takerFeeAssetData)
     	return
     }
 
@@ -247,7 +247,7 @@ async function checkArb(args) {
 
   // If profitable, then stop looking and trade!
   if(profitable) {
-  	console.log(zrxOrder)
+  	// console.log(zrxOrder)
     // Skip if another profitable arb has already been found
     // TODO remove this check, this value will be set to true never not back to false, meaning the bot will stop after the first arb
     // doesnt even make much sense since if this is always true, the interval will always clear, why return here after the bot has already done many api calls...
@@ -259,6 +259,7 @@ async function checkArb(args) {
     profitableArbFound = true
 
     // Log the arb
+    console.log("---------------- START PROFITABLE ARB ----------------")
     console.table([{
       'Profitable?': profitable,
       'Asset Order': assetOrder.join(', '),
@@ -268,6 +269,7 @@ async function checkArb(args) {
       'Profit': displayTokens(netProfit.toString(), assetOrder[0]).padEnd(22, ' '),
       'Timestamp': now(),
     }])
+    console.log("---------------- END PROFITABLE ARB ----------------")
 
     // Play alert tone
     playSound()
@@ -324,7 +326,7 @@ async function trade(flashTokenSymbol, flashTokenAddress, arbTokenAddress, order
   // Calculate slippage
   const minReturnWtihSplippage = minReturnWithSlippage = (new web3.utils.BN(minReturn)).mul(new web3.utils.BN('995')).div(new web3.utils.BN('1000')).toString()
 
-  Perform Trade
+  // Perform Trade
   receipt = await traderContract.methods.getFlashloan(
     flashTokenAddress, // address flashToken,
     FLASH_AMOUNT, // uint256 flashAmount, 
